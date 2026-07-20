@@ -10,7 +10,29 @@ import type {
 } from './types/kanban'
 import { DEFAULT_COLUMN_TITLES } from './types/kanban'
 
-const createEntityId = (prefix: string): string => `${prefix}-${crypto.randomUUID()}`
+const createFallbackUuid = (): string => {
+  const timestamp = Date.now().toString(36)
+
+  if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+    const randomValues = crypto.getRandomValues(new Uint32Array(4))
+    const randomToken = Array.from(randomValues, (value) => value.toString(36)).join('')
+
+    return `${timestamp}-${randomToken}`
+  }
+
+  const randomToken = Array.from({ length: 4 }, () => Math.random().toString(36).slice(2, 10)).join('')
+
+  return `${timestamp}-${randomToken}`
+}
+
+const createEntityId = (prefix: string): string => {
+  const uuid =
+    typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+      ? crypto.randomUUID()
+      : createFallbackUuid()
+
+  return `${prefix}-${uuid}`
+}
 
 const createTimestamp = (): string => new Date().toISOString()
 

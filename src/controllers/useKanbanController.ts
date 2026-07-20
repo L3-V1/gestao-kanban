@@ -1,4 +1,5 @@
 import { useLocalStorage } from './useLocalStorage'
+import { toast } from 'react-hot-toast'
 import {
   buildBoardView,
   createBoard,
@@ -26,6 +27,17 @@ import { loadKanbanState, saveKanbanState } from '../services/storageService'
 
 const createFallbackState = (): KanbanState => loadKanbanState()
 
+const hasStateChanged = (previousState: KanbanState, nextState: KanbanState): boolean =>
+  previousState !== nextState
+
+const notifySuccess = (message: string): void => {
+  toast.success(message)
+}
+
+const notifyError = (message: string): void => {
+  toast.error(message)
+}
+
 /**
  * Connects the kanban domain with the React UI.
  */
@@ -39,20 +51,47 @@ export const useKanbanController = () => {
   const boards = getBoardList(state)
 
   const createBoardHandler = (draft: BoardDraft): void => {
-    setState((currentState) => createBoard(currentState, draft))
+    setState((currentState) => {
+      const nextState = createBoard(currentState, draft)
+
+      if (hasStateChanged(currentState, nextState)) {
+        notifySuccess('Quadro criado com sucesso.')
+        return nextState
+      }
+
+      notifyError('Informe um nome válido para criar o quadro.')
+      return currentState
+    })
   }
 
   const updateBoardHandler = (boardId: string, draft: BoardDraft): void => {
-    setState((currentState) => updateBoard(currentState, boardId, draft))
+    setState((currentState) => {
+      const nextState = updateBoard(currentState, boardId, draft)
+
+      if (hasStateChanged(currentState, nextState)) {
+        notifySuccess('Quadro atualizado com sucesso.')
+        return nextState
+      }
+
+      notifyError('Não foi possível atualizar o quadro.')
+      return currentState
+    })
   }
 
   const deleteBoardHandler = (boardId: string): void => {
     setState((currentState) => {
       if (currentState.boardOrder.length === 1) {
+        notifyError('É necessário manter pelo menos um quadro.')
         return currentState
       }
 
-      return deleteBoard(currentState, boardId)
+      const nextState = deleteBoard(currentState, boardId)
+
+      if (hasStateChanged(currentState, nextState)) {
+        notifySuccess('Quadro removido com sucesso.')
+      }
+
+      return nextState
     })
   }
 
@@ -66,30 +105,87 @@ export const useKanbanController = () => {
 
   const createColumnHandler = (draft: ColumnDraft): void => {
     if (!state.activeBoardId) {
+      notifyError('Selecione ou crie um quadro antes de adicionar colunas.')
       return
     }
 
-    setState((currentState) => createColumn(currentState, currentState.activeBoardId, draft))
+    setState((currentState) => {
+      const nextState = createColumn(currentState, currentState.activeBoardId, draft)
+
+      if (hasStateChanged(currentState, nextState)) {
+        notifySuccess('Coluna criada com sucesso.')
+        return nextState
+      }
+
+      notifyError('Informe um título válido para criar a coluna.')
+      return currentState
+    })
   }
 
   const updateColumnHandler = (columnId: string, draft: ColumnDraft): void => {
-    setState((currentState) => updateColumn(currentState, columnId, draft))
+    setState((currentState) => {
+      const nextState = updateColumn(currentState, columnId, draft)
+
+      if (hasStateChanged(currentState, nextState)) {
+        notifySuccess('Coluna atualizada com sucesso.')
+        return nextState
+      }
+
+      notifyError('Não foi possível atualizar a coluna.')
+      return currentState
+    })
   }
 
   const deleteColumnHandler = (columnId: string): void => {
-    setState((currentState) => deleteColumn(currentState, columnId))
+    setState((currentState) => {
+      const nextState = deleteColumn(currentState, columnId)
+
+      if (hasStateChanged(currentState, nextState)) {
+        notifySuccess('Coluna removida com sucesso.')
+      }
+
+      return nextState
+    })
   }
 
   const createCardHandler = (columnId: string, draft: CardDraft): void => {
-    setState((currentState) => createCard(currentState, columnId, draft))
+    setState((currentState) => {
+      const nextState = createCard(currentState, columnId, draft)
+
+      if (hasStateChanged(currentState, nextState)) {
+        notifySuccess('Cartão criado com sucesso.')
+        return nextState
+      }
+
+      notifyError('Informe um título válido para criar o cartão.')
+      return currentState
+    })
   }
 
   const updateCardHandler = (cardId: string, draft: CardDraft): void => {
-    setState((currentState) => updateCard(currentState, cardId, draft))
+    setState((currentState) => {
+      const nextState = updateCard(currentState, cardId, draft)
+
+      if (hasStateChanged(currentState, nextState)) {
+        notifySuccess('Cartão atualizado com sucesso.')
+        return nextState
+      }
+
+      notifyError('Não foi possível atualizar o cartão.')
+      return currentState
+    })
   }
 
   const deleteCardHandler = (cardId: string): void => {
-    setState((currentState) => deleteCard(currentState, cardId))
+    setState((currentState) => {
+      const nextState = deleteCard(currentState, cardId)
+
+      if (hasStateChanged(currentState, nextState)) {
+        notifySuccess('Cartão removido com sucesso.')
+      }
+
+      return nextState
+    })
   }
 
   const moveColumnHandler = (activeColumnId: string, overColumnId: string): void => {

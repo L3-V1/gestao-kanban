@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { FolderPlus, Layers3, Plus } from 'lucide-react'
+import { Toaster } from 'react-hot-toast'
 import { BoardEditorModal } from './components/kanban/BoardEditorModal'
 import { BoardSidebar } from './components/kanban/BoardSidebar'
 import { CardEditorModal } from './components/kanban/CardEditorModal'
@@ -45,8 +46,33 @@ export default function App() {
   const cardDraftValue = toCardDraft(currentCardDraft)
 
   return (
-    <main className="min-h-screen px-3 py-4 sm:px-4 sm:py-6 md:px-6 lg:px-10">
-      <div className="mx-auto max-w-384">
+    <>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 2800,
+          style: {
+            background: 'var(--color-panel)',
+            color: 'var(--color-text)',
+            border: '1px solid var(--color-border)',
+            boxShadow: 'var(--shadow-soft)',
+          },
+          success: {
+            iconTheme: {
+              primary: '#047878',
+              secondary: '#f2fffd',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#f2fffd',
+            },
+          },
+        }}
+      />
+      <main className="min-h-screen px-3 py-4 sm:px-4 sm:py-6 md:px-6 lg:px-10">
+        <div className="mx-auto max-w-384">
         <section className="rounded-4xl border border-white/20 bg-(--color-panel) p-5 shadow-(--shadow-soft) backdrop-blur sm:rounded-4xl sm:p-6 md:p-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
@@ -147,57 +173,58 @@ export default function App() {
             )}
           </div>
         </section>
-      </div>
+        </div>
 
-      <BoardEditorModal
-        initialValue={boardDraftValue}
-        key={boardModal.mode === 'edit' ? `board-${boardModal.boardId}` : `board-${boardModal.mode}`}
-        mode={boardModal.mode === 'edit' ? 'edit' : 'create'}
-        onClose={() => setBoardModal({ mode: 'closed' })}
-        onSubmit={(draft) => {
-          if (boardModal.mode === 'edit') {
-            controller.updateBoard(boardModal.boardId, draft)
-            return
-          }
+        <BoardEditorModal
+          initialValue={boardDraftValue}
+          key={boardModal.mode === 'edit' ? `board-${boardModal.boardId}` : `board-${boardModal.mode}`}
+          mode={boardModal.mode === 'edit' ? 'edit' : 'create'}
+          onClose={() => setBoardModal({ mode: 'closed' })}
+          onSubmit={(draft) => {
+            if (boardModal.mode === 'edit') {
+              controller.updateBoard(boardModal.boardId, draft)
+              return
+            }
 
-          controller.createBoard(draft)
-        }}
-        open={boardModal.mode !== 'closed'}
-      />
+            controller.createBoard(draft)
+          }}
+          open={boardModal.mode !== 'closed'}
+        />
 
-      <ColumnEditorModal
-        initialValue={columnDraftValue}
-        key={columnModal.mode === 'edit' ? `column-${columnModal.columnId}` : `column-${columnModal.mode}`}
-        mode={columnModal.mode === 'edit' ? 'edit' : 'create'}
-        onClose={() => setColumnModal({ mode: 'closed' })}
-        onSubmit={(draft) => {
-          if (columnModal.mode === 'edit') {
-            controller.updateColumn(columnModal.columnId, draft)
-            return
-          }
+        <ColumnEditorModal
+          initialValue={columnDraftValue}
+          key={columnModal.mode === 'edit' ? `column-${columnModal.columnId}` : `column-${columnModal.mode}`}
+          mode={columnModal.mode === 'edit' ? 'edit' : 'create'}
+          onClose={() => setColumnModal({ mode: 'closed' })}
+          onSubmit={(draft) => {
+            if (columnModal.mode === 'edit') {
+              controller.updateColumn(columnModal.columnId, draft)
+              return
+            }
 
-          controller.createColumn(draft)
-        }}
-        open={columnModal.mode !== 'closed'}
-      />
+            controller.createColumn(draft)
+          }}
+          open={columnModal.mode !== 'closed'}
+        />
 
-      <CardEditorModal
-        initialValue={cardDraftValue}
-        key={cardModal.mode === 'edit' ? `card-${cardModal.cardId}` : `card-${cardModal.mode}`}
-        mode={cardModal.mode === 'edit' ? 'edit' : 'create'}
-        onClose={() => setCardModal({ mode: 'closed' })}
-        onSubmit={(draft) => {
-          if (cardModal.mode === 'edit') {
-            controller.updateCard(cardModal.cardId, draft)
-            return
-          }
+        <CardEditorModal
+          initialValue={cardDraftValue}
+          key={cardModal.mode === 'edit' ? `card-${cardModal.cardId}` : `card-${cardModal.mode}`}
+          mode={cardModal.mode === 'edit' ? 'edit' : 'create'}
+          onClose={() => setCardModal({ mode: 'closed' })}
+          onSubmit={(draft) => {
+            if (cardModal.mode === 'edit') {
+              controller.updateCard(cardModal.cardId, draft)
+              return
+            }
 
-          if (cardModal.mode === 'create' && cardModal.columnId) {
-            controller.createCard(cardModal.columnId, draft)
-          }
-        }}
-        open={cardModal.mode !== 'closed'}
-      />
-    </main>
+            if (cardModal.mode === 'create' && cardModal.columnId) {
+              controller.createCard(cardModal.columnId, draft)
+            }
+          }}
+          open={cardModal.mode !== 'closed'}
+        />
+      </main>
+    </>
   )
 }
