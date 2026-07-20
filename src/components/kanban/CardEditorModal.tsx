@@ -1,8 +1,11 @@
 import { useState } from 'react'
+import { Save, SquareKanban, X } from 'lucide-react'
 import { AREA_OPTIONS, PRIORITY_OPTIONS, type CardDraft } from '../../models/types/kanban'
 import { Button } from '../ui/Button'
+import { FormField } from '../ui/FormField'
 import { Input } from '../ui/Input'
 import { Modal } from '../ui/Modal'
+import { ModalActions } from '../ui/ModalActions'
 import { Select } from '../ui/Select'
 import { Textarea } from '../ui/Textarea'
 
@@ -38,18 +41,16 @@ export function CardEditorModal({
           onClose()
         }}
       >
-        <label className="block space-y-4">
-          <span className="block text-sm font-semibold text-(--color-text)">Título</span>
+        <FormField label="Título">
           <Input
             onChange={(event) => setDraft((currentDraft) => ({ ...currentDraft, title: event.target.value }))}
             placeholder="Adicionar testes de integração"
             required
             value={draft.title}
           />
-        </label>
+        </FormField>
 
-        <label className="block space-y-4">
-          <span className="block text-sm font-semibold text-(--color-text)">Descrição</span>
+        <FormField label="Descrição">
           <Textarea
             onChange={(event) =>
               setDraft((currentDraft) => ({ ...currentDraft, description: event.target.value }))
@@ -57,11 +58,10 @@ export function CardEditorModal({
             placeholder="Notas técnicas relevantes, impedimentos ou contexto."
             value={draft.description}
           />
-        </label>
+        </FormField>
 
         <div className="grid gap-8 md:grid-cols-2">
-          <label className="block space-y-4">
-            <span className="block text-sm font-semibold text-(--color-text)">Prioridade</span>
+          <FormField label="Prioridade">
             <Select
               onChange={(event) =>
                 setDraft((currentDraft) => ({
@@ -77,10 +77,9 @@ export function CardEditorModal({
                 </option>
               ))}
             </Select>
-          </label>
+          </FormField>
 
-          <label className="block space-y-4">
-            <span className="block text-sm font-semibold text-(--color-text)">Área</span>
+          <FormField label="Área">
             <Select
               onChange={(event) =>
                 setDraft((currentDraft) => ({
@@ -96,12 +95,11 @@ export function CardEditorModal({
                 </option>
               ))}
             </Select>
-          </label>
+          </FormField>
         </div>
 
         <div className="grid gap-8 md:grid-cols-2">
-          <label className="block space-y-4">
-            <span className="block text-sm font-semibold text-(--color-text)">Responsável</span>
+          <FormField label="Responsável">
             <Input
               onChange={(event) =>
                 setDraft((currentDraft) => ({ ...currentDraft, assignee: event.target.value }))
@@ -109,10 +107,9 @@ export function CardEditorModal({
               placeholder="Pessoa responsável"
               value={draft.assignee}
             />
-          </label>
+          </FormField>
 
-          <label className="block space-y-4">
-            <span className="block text-sm font-semibold text-(--color-text)">Data limite</span>
+          <FormField label="Data limite">
             <Input
               onChange={(event) =>
                 setDraft((currentDraft) => ({ ...currentDraft, dueDate: event.target.value }))
@@ -120,15 +117,19 @@ export function CardEditorModal({
               type="date"
               value={draft.dueDate}
             />
-          </label>
+          </FormField>
         </div>
 
-        <div className="flex justify-end gap-3">
+        <ModalActions>
           <Button onClick={onClose} variant="ghost">
+            <X size={16} />
             Cancelar
           </Button>
-          <Button type="submit">{mode === 'create' ? 'Criar cartão' : 'Salvar alterações'}</Button>
-        </div>
+          <Button type="submit">
+            {mode === 'create' ? <SquareKanban size={16} /> : <Save size={16} />}
+            {mode === 'create' ? 'Criar cartão' : 'Salvar alterações'}
+          </Button>
+        </ModalActions>
       </form>
     </Modal>
   )

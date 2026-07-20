@@ -1,8 +1,11 @@
 import { useState } from 'react'
+import { Columns3, Save, X } from 'lucide-react'
 import type { ColumnDraft } from '../../models/types/kanban'
 import { Button } from '../ui/Button'
+import { FormField } from '../ui/FormField'
 import { Input } from '../ui/Input'
 import { Modal } from '../ui/Modal'
+import { ModalActions } from '../ui/ModalActions'
 
 interface ColumnEditorModalProps {
   open: boolean
@@ -36,22 +39,25 @@ export function ColumnEditorModal({
           onClose()
         }}
       >
-        <label className="block space-y-4">
-          <span className="block text-sm font-semibold text-(--color-text)">Título da coluna</span>
+        <FormField label="Título da coluna">
           <Input
             onChange={(event) => setDraft({ title: event.target.value })}
             placeholder="Validação de QA"
             required
             value={draft.title}
           />
-        </label>
+        </FormField>
 
-        <div className="flex justify-end gap-3">
+        <ModalActions>
           <Button onClick={onClose} variant="ghost">
+            <X size={16} />
             Cancelar
           </Button>
-          <Button type="submit">{mode === 'create' ? 'Criar coluna' : 'Salvar alterações'}</Button>
-        </div>
+          <Button type="submit">
+            {mode === 'create' ? <Columns3 size={16} /> : <Save size={16} />}
+            {mode === 'create' ? 'Criar coluna' : 'Salvar alterações'}
+          </Button>
+        </ModalActions>
       </form>
     </Modal>
   )

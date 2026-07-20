@@ -49,7 +49,7 @@ export function BoardSidebar({
                 'group w-full rounded-3xl border p-4 text-left transition duration-200',
                 isActive
                   ? 'border-transparent bg-(--color-accent) text-white shadow-[0_20px_35px_-24px_var(--color-accent)]'
-                  : 'border-(--color-border) bg-(--color-surface) text-(--color-text) hover:border-(--color-accent)/25 hover:bg-(--color-surface-strong)'
+                  : 'border-(--color-border) bg-(--color-surface) text-(--color-text) hover:border-(--color-accent)/40 hover:bg-(--color-surface-strong)'
               )}
               key={board.id}
               onClick={handleBoardSelect}
@@ -90,7 +90,7 @@ export function BoardSidebar({
                     aria-label={`Mover ${board.name} para cima`}
                     className={cn(
                       'h-8 w-8 rounded-full p-0',
-                      isActive ? 'bg-white/10 text-white hover:bg-white/15' : ''
+                      isActive ? 'bg-white/12 text-white hover:bg-white/22' : ''
                     )}
                     disabled={index === 0}
                     onClick={(event) => {
@@ -105,7 +105,7 @@ export function BoardSidebar({
                     aria-label={`Mover ${board.name} para baixo`}
                     className={cn(
                       'h-8 w-8 rounded-full p-0',
-                      isActive ? 'bg-white/10 text-white hover:bg-white/15' : ''
+                      isActive ? 'bg-white/12 text-white hover:bg-white/22' : ''
                     )}
                     disabled={index === boards.length - 1}
                     onClick={(event) => {
@@ -123,7 +123,7 @@ export function BoardSidebar({
                 <Button
                   className={cn(
                     'h-9 flex-1 rounded-full px-3 text-xs sm:flex-none',
-                    isActive ? 'bg-white/10 text-white hover:bg-white/15' : ''
+                    isActive ? 'bg-white/12 text-white hover:bg-white/22' : ''
                   )}
                   onClick={(event) => {
                     event.stopPropagation()
@@ -137,7 +137,7 @@ export function BoardSidebar({
                 <Button
                   className={cn(
                     'h-9 flex-1 rounded-full px-3 text-xs sm:flex-none',
-                    isActive ? 'bg-rose-500/20 text-white hover:bg-rose-500/25' : ''
+                    isActive ? 'bg-rose-500/24 text-white hover:bg-rose-500/36' : ''
                   )}
                   disabled={boards.length === 1}
                   onClick={(event) => {

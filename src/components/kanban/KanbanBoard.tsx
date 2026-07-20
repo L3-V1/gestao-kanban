@@ -12,6 +12,7 @@ import {
 } from '@dnd-kit/core'
 import { useState } from 'react'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
+import { findCardLocation } from '../../models/kanbanSelectors'
 import type { KanbanCard, KanbanColumn } from '../../models/types/kanban'
 import { KanbanCard as CardOverlay } from './KanbanCard'
 import { KanbanColumn as ColumnCard } from './KanbanColumn'
@@ -31,21 +32,6 @@ interface KanbanBoardProps {
   onDeleteColumn: (columnId: string) => void
   onEditCard: (cardId: string) => void
   onDeleteCard: (cardId: string) => void
-}
-
-const findCardLocation = (
-  cardsByColumn: Record<string, KanbanCard[]>,
-  cardId: string
-): { columnId: string; index: number } | null => {
-  for (const [columnId, cards] of Object.entries(cardsByColumn)) {
-    const index = cards.findIndex((card) => card.id === cardId)
-
-    if (index >= 0) {
-      return { columnId, index }
-    }
-  }
-
-  return null
 }
 
 export function KanbanBoard({

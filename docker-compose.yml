@@ -1,0 +1,7 @@
+services:
+  web:
+    image: gestao-kanban:latest
+    container_name: gestao-kanban
+    restart: unless-stopped
+    ports:
+      - "3006:80"

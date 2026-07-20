@@ -15,22 +15,16 @@ import {
   updateCard,
   updateColumn,
 } from '../models/kanbanDomain'
+import { getBoardList, getCardById, getColumnById } from '../models/kanbanSelectors'
 import type {
   BoardDraft,
   CardDraft,
   ColumnDraft,
-  KanbanCard,
-  KanbanColumn,
   KanbanState,
 } from '../models/types/kanban'
 import { loadKanbanState, saveKanbanState } from '../services/storageService'
 
 const createFallbackState = (): KanbanState => loadKanbanState()
-
-const getCardById = (state: KanbanState, cardId: string): KanbanCard | null => state.cards[cardId] ?? null
-
-const getColumnById = (state: KanbanState, columnId: string): KanbanColumn | null =>
-  state.columns[columnId] ?? null
 
 /**
  * Connects the kanban domain with the React UI.
@@ -42,9 +36,7 @@ export const useKanbanController = () => {
   })
 
   const boardView = buildBoardView(state, state.activeBoardId)
-  const boards = state.boardOrder
-    .map((boardId) => state.boards[boardId])
-    .filter((board) => Boolean(board))
+  const boards = getBoardList(state)
 
   const createBoardHandler = (draft: BoardDraft): void => {
     setState((currentState) => createBoard(currentState, draft))

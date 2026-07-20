@@ -7,25 +7,11 @@ import { ColumnEditorModal } from './components/kanban/ColumnEditorModal'
 import { KanbanBoard } from './components/kanban/KanbanBoard'
 import { Button } from './components/ui/Button'
 import { useKanbanController } from './controllers/useKanbanController'
-import type { BoardDraft, CardDraft, ColumnDraft } from './models/types/kanban'
-
-const EMPTY_BOARD_DRAFT: BoardDraft = {
-  name: '',
-  description: '',
-}
-
-const EMPTY_COLUMN_DRAFT: ColumnDraft = {
-  title: '',
-}
-
-const EMPTY_CARD_DRAFT: CardDraft = {
-  title: '',
-  description: '',
-  priority: 'Média',
-  area: 'Frontend',
-  assignee: '',
-  dueDate: '',
-}
+import {
+  toBoardDraft,
+  toCardDraft,
+  toColumnDraft,
+} from './models/kanbanSelectors'
 
 type BoardModalState =
   | { mode: 'closed' }
@@ -54,29 +40,9 @@ export default function App() {
     columnModal.mode === 'edit' ? controller.getColumnById(columnModal.columnId) : null
   const currentCardDraft = cardModal.mode === 'edit' ? controller.getCardById(cardModal.cardId) : null
 
-  const boardDraftValue: BoardDraft = currentBoardDraft
-    ? {
-        name: currentBoardDraft.name,
-        description: currentBoardDraft.description,
-      }
-    : EMPTY_BOARD_DRAFT
-
-  const columnDraftValue: ColumnDraft = currentColumnDraft
-    ? {
-        title: currentColumnDraft.title,
-      }
-    : EMPTY_COLUMN_DRAFT
-
-  const cardDraftValue: CardDraft = currentCardDraft
-    ? {
-        title: currentCardDraft.title,
-        description: currentCardDraft.description,
-        priority: currentCardDraft.priority,
-        area: currentCardDraft.area,
-        assignee: currentCardDraft.assignee,
-        dueDate: currentCardDraft.dueDate,
-      }
-    : EMPTY_CARD_DRAFT
+  const boardDraftValue = toBoardDraft(currentBoardDraft)
+  const columnDraftValue = toColumnDraft(currentColumnDraft)
+  const cardDraftValue = toCardDraft(currentCardDraft)
 
   return (
     <main className="min-h-screen px-3 py-4 sm:px-4 sm:py-6 md:px-6 lg:px-10">
