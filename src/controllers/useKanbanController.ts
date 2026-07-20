@@ -51,48 +51,44 @@ export const useKanbanController = () => {
   const boards = getBoardList(state)
 
   const createBoardHandler = (draft: BoardDraft): void => {
-    setState((currentState) => {
-      const nextState = createBoard(currentState, draft)
+    const nextState = createBoard(state, draft)
 
-      if (hasStateChanged(currentState, nextState)) {
-        notifySuccess('Quadro criado com sucesso.')
-        return nextState
-      }
+    if (hasStateChanged(state, nextState)) {
+      setState(nextState)
+      notifySuccess('Quadro criado com sucesso.')
+      return
+    }
 
-      notifyError('Informe um nome válido para criar o quadro.')
-      return currentState
-    })
+    notifyError('Informe um nome válido para criar o quadro.')
   }
 
   const updateBoardHandler = (boardId: string, draft: BoardDraft): void => {
-    setState((currentState) => {
-      const nextState = updateBoard(currentState, boardId, draft)
+    const nextState = updateBoard(state, boardId, draft)
 
-      if (hasStateChanged(currentState, nextState)) {
-        notifySuccess('Quadro atualizado com sucesso.')
-        return nextState
-      }
+    if (hasStateChanged(state, nextState)) {
+      setState(nextState)
+      notifySuccess('Quadro atualizado com sucesso.')
+      return
+    }
 
-      notifyError('Não foi possível atualizar o quadro.')
-      return currentState
-    })
+    notifyError('Não foi possível atualizar o quadro.')
   }
 
   const deleteBoardHandler = (boardId: string): void => {
-    setState((currentState) => {
-      if (currentState.boardOrder.length === 1) {
-        notifyError('É necessário manter pelo menos um quadro.')
-        return currentState
-      }
+    if (state.boardOrder.length === 1) {
+      notifyError('É necessário manter pelo menos um quadro.')
+      return
+    }
 
-      const nextState = deleteBoard(currentState, boardId)
+    const nextState = deleteBoard(state, boardId)
 
-      if (hasStateChanged(currentState, nextState)) {
-        notifySuccess('Quadro removido com sucesso.')
-      }
+    if (hasStateChanged(state, nextState)) {
+      setState(nextState)
+      notifySuccess('Quadro removido com sucesso.')
+      return
+    }
 
-      return nextState
-    })
+    notifyError('Não foi possível remover o quadro.')
   }
 
   const moveBoardHandler = (boardId: string, direction: 'up' | 'down'): void => {
@@ -109,83 +105,75 @@ export const useKanbanController = () => {
       return
     }
 
-    setState((currentState) => {
-      const nextState = createColumn(currentState, currentState.activeBoardId, draft)
+    const nextState = createColumn(state, state.activeBoardId, draft)
 
-      if (hasStateChanged(currentState, nextState)) {
-        notifySuccess('Coluna criada com sucesso.')
-        return nextState
-      }
+    if (hasStateChanged(state, nextState)) {
+      setState(nextState)
+      notifySuccess('Coluna criada com sucesso.')
+      return
+    }
 
-      notifyError('Informe um título válido para criar a coluna.')
-      return currentState
-    })
+    notifyError('Informe um título válido para criar a coluna.')
   }
 
   const updateColumnHandler = (columnId: string, draft: ColumnDraft): void => {
-    setState((currentState) => {
-      const nextState = updateColumn(currentState, columnId, draft)
+    const nextState = updateColumn(state, columnId, draft)
 
-      if (hasStateChanged(currentState, nextState)) {
-        notifySuccess('Coluna atualizada com sucesso.')
-        return nextState
-      }
+    if (hasStateChanged(state, nextState)) {
+      setState(nextState)
+      notifySuccess('Coluna atualizada com sucesso.')
+      return
+    }
 
-      notifyError('Não foi possível atualizar a coluna.')
-      return currentState
-    })
+    notifyError('Não foi possível atualizar a coluna.')
   }
 
   const deleteColumnHandler = (columnId: string): void => {
-    setState((currentState) => {
-      const nextState = deleteColumn(currentState, columnId)
+    const nextState = deleteColumn(state, columnId)
 
-      if (hasStateChanged(currentState, nextState)) {
-        notifySuccess('Coluna removida com sucesso.')
-      }
+    if (hasStateChanged(state, nextState)) {
+      setState(nextState)
+      notifySuccess('Coluna removida com sucesso.')
+      return
+    }
 
-      return nextState
-    })
+    notifyError('Não foi possível remover a coluna.')
   }
 
   const createCardHandler = (columnId: string, draft: CardDraft): void => {
-    setState((currentState) => {
-      const nextState = createCard(currentState, columnId, draft)
+    const nextState = createCard(state, columnId, draft)
 
-      if (hasStateChanged(currentState, nextState)) {
-        notifySuccess('Cartão criado com sucesso.')
-        return nextState
-      }
+    if (hasStateChanged(state, nextState)) {
+      setState(nextState)
+      notifySuccess('Cartão criado com sucesso.')
+      return
+    }
 
-      notifyError('Informe um título válido para criar o cartão.')
-      return currentState
-    })
+    notifyError('Informe um título válido para criar o cartão.')
   }
 
   const updateCardHandler = (cardId: string, draft: CardDraft): void => {
-    setState((currentState) => {
-      const nextState = updateCard(currentState, cardId, draft)
+    const nextState = updateCard(state, cardId, draft)
 
-      if (hasStateChanged(currentState, nextState)) {
-        notifySuccess('Cartão atualizado com sucesso.')
-        return nextState
-      }
+    if (hasStateChanged(state, nextState)) {
+      setState(nextState)
+      notifySuccess('Cartão atualizado com sucesso.')
+      return
+    }
 
-      notifyError('Não foi possível atualizar o cartão.')
-      return currentState
-    })
+    notifyError('Não foi possível atualizar o cartão.')
   }
 
   const deleteCardHandler = (cardId: string): void => {
-    setState((currentState) => {
-      const nextState = deleteCard(currentState, cardId)
+    const nextState = deleteCard(state, cardId)
 
-      if (hasStateChanged(currentState, nextState)) {
-        notifySuccess('Cartão removido com sucesso.')
-      }
+    if (hasStateChanged(state, nextState)) {
+      setState(nextState)
+      notifySuccess('Cartão removido com sucesso.')
+      return
+    }
 
-      return nextState
-    })
+    notifyError('Não foi possível remover o cartão.')
   }
 
   const moveColumnHandler = (activeColumnId: string, overColumnId: string): void => {
